@@ -22,6 +22,7 @@ router.get('/', async (req: Request, res: Response) => {
         X-Amz-SignedHeaders=host
     */
     items.rows.map((item) => {  
+
             if(item.url) {
                 item.url = AWS.getGetSignedUrl(item.url);
             }
@@ -83,7 +84,7 @@ router.get('/signed-url/:fileName', requireAuth, async (req: Request, res: Respo
 // NOTE the file name is they key name in the s3 bucket.
 // body : {caption: string, fileName: string};
 router.post('/', requireAuth, async (req: Request, res: Response) => {
-  
+
     const caption = req.body.caption;
     const fileName = req.body.url;
 
