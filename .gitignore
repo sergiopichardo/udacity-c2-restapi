@@ -13,8 +13,8 @@ log.txt
 npm-debug.log*
 
 .env
-./.ebextensions/
-./.elasticbeanstalk/
+.ebextensions/
+.elasticbeanstalk/
 
 .idea/
 .ionic/
