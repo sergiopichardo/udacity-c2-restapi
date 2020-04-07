@@ -20,6 +20,9 @@ export const config = {
         "host": process.env.PROD_HOST,
         "dialect": process.env.PROD_DIALECT,
         "aws_medi_bucket": process.env.AWS_MEDIA_BUCKET_PROD
+    },
+    "jwt": {
+      "secret": process.env.JWT_SECRET
     }
 }
 

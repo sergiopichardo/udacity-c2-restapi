@@ -82,9 +82,8 @@ router.get('/signed-url/:fileName', requireAuth, async (req: Request, res: Respo
 // Post meta data and the filename after a file is uploaded 
 // NOTE the file name is they key name in the s3 bucket.
 // body : {caption: string, fileName: string};
-router.post('/', 
-    requireAuth, 
-    async (req: Request, res: Response) => {
+router.post('/', requireAuth, async (req: Request, res: Response) => {
+  
     const caption = req.body.caption;
     const fileName = req.body.url;
 

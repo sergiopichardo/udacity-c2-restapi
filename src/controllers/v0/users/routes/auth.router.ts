@@ -1,9 +1,10 @@
 import { Router, Request, Response } from 'express';
-
 import { User } from '../models/User';
-
+import { config } from '../../../../config/config'
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+
+
 import { NextFunction } from 'connect';
 
 import * as EmailValidator from 'email-validator';
@@ -25,7 +26,7 @@ async function comparePasswords(plainTextPassword: string, hash: string): Promis
 
 function generateJWT(user: User): string {
     //@TODO Use jwt to create a new JWT Payload containing
-    return ""
+    return jwt.sign(user, config.jwt.secret)
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
@@ -59,6 +60,7 @@ router.get('/verification',
 router.post('/login', async (req: Request, res: Response) => {
     const email = req.body.email;
     const password = req.body.password;
+
     // check email is valid
     if (!email || !EmailValidator.validate(email)) {
         return res.status(400).send({ auth: false, message: 'Email is required or malformed' });
@@ -70,6 +72,7 @@ router.post('/login', async (req: Request, res: Response) => {
     }
 
     const user = await User.findByPk(email);
+
     // check that user exists
     if(!user) {
         return res.status(401).send({ auth: false, message: 'Unauthorized' });
@@ -85,7 +88,11 @@ router.post('/login', async (req: Request, res: Response) => {
     // Generate JWT
     const jwt = generateJWT(user);
 
-    res.status(200).send({ auth: true, token: jwt, user: user.short()});
+    res.status(200).send({ 
+      auth: true, 
+      token: jwt, 
+      user: user.short()
+    });
 });
 
 //register a new user
