@@ -35,8 +35,8 @@ router.get('/:id', requireAuth, async (req: Request, res: Response) => {
 
     const item: FeedItem = await FeedItem.findByPk(id)
 
-    if (item === null) {
-        return res.status(404).send('Item not found')
+    if (!item) {
+        return res.status(404).send({ message: "Item not found" })
     }    
 
     res.status(200).send(item)
@@ -51,7 +51,7 @@ router.patch('/:id', requireAuth, async (req: Request, res: Response) => {
         const item : FeedItem = await FeedItem.findOne({ where: { id: id }})
 
         if (item === null) {
-            return res.status(404).send({ error: "item not found"})
+            return res.status(404).send({ message: "item not found"})
         }
 
         if (caption) {
@@ -60,16 +60,18 @@ router.patch('/:id', requireAuth, async (req: Request, res: Response) => {
 
         if (url) {
             item['url'] = url
-        }
+        } 
         
         await item.save()
 
-        res.status(400).send(item)
+        res.status(200).send(item)
 });
 
 
 // Get a signed url to put a new item in the bucket
-router.get('/signed-url/:fileName', requireAuth, async (req: Request, res: Response) => {
+router.get('/signed-url/:fileName', 
+    requireAuth, 
+    async (req: Request, res: Response) => {
 
     let { fileName } = req.params;
 

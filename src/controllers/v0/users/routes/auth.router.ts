@@ -37,6 +37,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     
     // Bearer lkajsdlkfjalsief.alsdjflaksdjflakjseiofaj.laskdjfoaseifjasldkfa 
     const token_bearer = req.headers.authorization.split(' ');
+
     if(token_bearer.length != 2){
         return res.status(401).send({ message: 'Malformed token.' });
     }
@@ -52,10 +53,13 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     });
 }
 
-router.get('/verification', 
-    requireAuth, 
-    async (req: Request, res: Response) => {
-        return res.status(200).send({ auth: true, message: 'Authenticated.' });
+router.get('/verification', requireAuth, async (req: Request, res: Response) => {
+        return res
+          .status(200)
+          .send({ 
+            auth: true, 
+            message: 'Authenticated.' 
+          });
 });
 
 router.post('/login', async (req: Request, res: Response) => {
