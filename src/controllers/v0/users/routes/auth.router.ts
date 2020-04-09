@@ -12,7 +12,7 @@ import * as EmailValidator from 'email-validator';
 const router: Router = Router();
 
 async function generatePassword(plainTextPassword: string): Promise<string> {
-  //@TODO Use Bcrypt to Generated Salted Hashed Passwords
+    // Use Bcrypt to Generated Salted Hashed Passwords
     const saltRounds = 10
     const salt = await bcrypt.genSalt(saltRounds)
     const hash = await bcrypt.hash(plainTextPassword, salt)
@@ -20,13 +20,13 @@ async function generatePassword(plainTextPassword: string): Promise<string> {
 }
 
 async function comparePasswords(plainTextPassword: string, hash: string): Promise<boolean> {
-    //@TODO Use Bcrypt to Compare your password to your Salted Hashed Password
+    // Use Bcrypt to Compare your password to your Salted Hashed Password
     return await bcrypt.compare(plainTextPassword, hash)
 }
 
 function generateJWT(user: User): string {
     //@TODO Use jwt to create a new JWT Payload containing
-    return jwt.sign(user, config.jwt.secret)
+    return jwt.sign(user.short(), config.jwt.secret)
 }
 
 export function requireAuth(req: Request, res: Response, next: NextFunction) {
@@ -35,6 +35,7 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
         return res.status(401).send({ message: 'No authorization headers.' });
     }
     
+    // 0       1 
     // Bearer lkajsdlkfjalsief.alsdjflaksdjflakjseiofaj.laskdjfoaseifjasldkfa 
     const token_bearer = req.headers.authorization.split(' ');
 
@@ -45,21 +46,19 @@ export function requireAuth(req: Request, res: Response, next: NextFunction) {
     const token = token_bearer[1];
 
     return jwt.verify(token, config.jwt.secret, (err, decoded) => {
-      if (err) {
-        return res.status(500).send({ auth: false, message: 'Failed to authenticate.' });
-      }
+        if (err) {
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate.' });
+        }
 
-      return next();
+        return next();
     });
 }
 
 router.get('/verification', requireAuth, async (req: Request, res: Response) => {
-        return res
-          .status(200)
-          .send({ 
-            auth: true, 
-            message: 'Authenticated.' 
-          });
+    return res.status(200).send({ 
+        auth: true, 
+        message: 'Authenticated.' 
+    });
 });
 
 router.post('/login', async (req: Request, res: Response) => {
@@ -94,9 +93,9 @@ router.post('/login', async (req: Request, res: Response) => {
     const jwt = generateJWT(user);
 
     res.status(200).send({ 
-      auth: true, 
-      token: jwt, 
-      user: user.short()
+        auth: true, 
+        token: jwt, 
+        user: user.short()
     });
 });
 

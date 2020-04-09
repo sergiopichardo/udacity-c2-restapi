@@ -22,7 +22,7 @@ export const config = {
         "aws_medi_bucket": process.env.AWS_MEDIA_BUCKET_PROD
     },
     "jwt": {
-      "secret": process.env.JWT_SECRET
+        "secret": process.env.JWT_SECRET
     }
 }
 
